@@ -1,0 +1,6 @@
+host: ${HOST}
+port: ${PORT}
+
+mongo:
+  CLUSTER_URL: ${MONGO_CLUSTER_URL}
+  DATABASE: "lighthouse"
