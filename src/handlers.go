@@ -6,6 +6,7 @@ import (
 	"time"
 	"net/http"
 	"encoding/json"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,13 +34,16 @@ func (app *Application) AnalyticHandler(w http.ResponseWriter, r *http.Request) 
 	record := analyticRecord{getIPAddress(r), time.Now()}
 	_, err := collection.InsertOne(context.TODO(), record)
 
+	opts := options.Count().SetMaxTime(200 * time.Millisecond)
+	result, err := collection.CountDocuments(context.TODO(), bson.D{{}}, opts)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	if _, ok := params["badge"]; ok{
 		w.Header().Set("Content-Type", "image/svg+xml; charset=utf-8")
-		svgTemplate.Execute(w, BadgeSvgData{Count: "3.5M"})
+		svgTemplate.Execute(w, BadgeSvgData{Count: strconv.Itoa(int(result))})
 		return
 	}
 
