@@ -12,6 +12,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var (
+	svgTemplate = loadTemplates("static/badge.svg")
+)
+
 // HomeHandler ...
 func (app *Application) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]string)
@@ -33,7 +37,12 @@ func (app *Application) AnalyticHandler(w http.ResponseWriter, r *http.Request) 
 		log.Fatal(err)
 	}
 
-	log.Println(params)
+	if _, ok := params["badge"]; ok{
+		w.Header().Set("Content-Type", "image/svg+xml; charset=utf-8")
+		svgTemplate.Execute(w, BadgeSvgData{Count: "3.5M"})
+		return
+	}
+
 	w.WriteHeader(http.StatusNoContent)
 }
 

@@ -12,3 +12,7 @@ type analyticRecord struct {
 type statModel struct {
 	Count int64 `json:"count"`
 }
+
+type BadgeSvgData struct{
+	Count string
+}
