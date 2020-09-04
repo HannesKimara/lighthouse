@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongo_data_lh:/data/db
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lighthouse/lighthouse_web
+    container_name: lighthouse_web
+    env_file: ./.env
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongo
+  
+volumes:
+  mongo_data_lh:
+    external: false
